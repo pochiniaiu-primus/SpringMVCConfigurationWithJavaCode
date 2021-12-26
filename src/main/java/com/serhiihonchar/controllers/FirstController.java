@@ -27,8 +27,43 @@ public class FirstController {
         return "first/hello";
     }
 
+
     @GetMapping("/goodbye")
     public String goodByePage() {
         return "first/goodbye";
+    }
+
+    @GetMapping("/calculator")
+    public String calculator(@RequestParam(value = "a", required = false) int a,
+                             @RequestParam(value = "b", required = false) int b,
+                             @RequestParam(value = "action", required = false) String action,
+                             Model model) {
+        double result;
+        switch (action) {
+            case "multiplication":
+                result = a * b;
+                break;
+            case "division":
+                if (b != 0) {
+                    result = a / (double) b;// 1/2=0.5
+                } else {
+                    throw new IllegalArgumentException("b must not to be a zero");
+                }
+                break;
+            case "subtraction":
+                result = a - b;
+                break;
+            case "addition":
+                result = a + b;
+                break;
+            default:
+                result = 0;
+                model.addAttribute("error","You enter the wrong action! Try " + "multiplication" + " or " +
+                        "division" + " or" + " subtraction" + " or" + " addition !");
+                break;
+        }
+        model.addAttribute("result", result);
+
+        return "first/calculator";
     }
 }
